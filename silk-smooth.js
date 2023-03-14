@@ -11,12 +11,19 @@ const silkSmooth = {
             const a = e.offsetHeight
             this._w.removeChild(e)
         })
-        this.createDOM()
+        this.createDOM(_dArr)
     },
-    createDOM() {
+    createDOM(DOM) {
         const newDiv = document.createElement("div");
         const newContent = document.createTextNode("Hi there and greetings!");
         newDiv.appendChild(newContent);
-        document.getElementById('silk_scroll').appendChild(newDiv)
+        const _d = [...DOM]
+        // document.getElementById('silk_scroll').appendChild(newDiv)
+        _d.forEach((item, index) => {
+            const newDiv = document.createElement("div");
+            newDiv.appendChild(item)
+            newDiv.style.cssText = `position:absolute;width:100%;height:100%;z-index:${999 - index}`
+            document.getElementById('silk_scroll').appendChild(newDiv)
+        })
     }
 }
