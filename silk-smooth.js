@@ -38,6 +38,8 @@ const silkSmooth = {
             }
             if (afterScrollNowDOM) {
                 afterScrollNowDOM.style.transform = 'translateY(0%)'
+            } else {
+                _silkChildrenDOM[scrollNowDOMIndex].style.transform = 'translateY(0%)'
             }
         }
     },

@@ -4,6 +4,8 @@
   height: 700px;
   background: #772b11;
   margin: 0px auto;
+  top: 50%;
+  transform: translateY(-50%);
 }
 .higo {
   position: absolute;
