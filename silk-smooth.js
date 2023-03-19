@@ -22,6 +22,7 @@ const silkSmooth = {
             const _silkChildrenDOM = _silkWrapDOM.children
             const _silkTop = _silkDOM.offsetTop
             window.requestAnimationFrame(scrollPosition)
+            window.requestAnimationFrame(watcherScroll)
             if (screenScrollTop < _silkTop) {
                 for (let i = 0; i < _silkChildrenDOM.length; i++) {
                     _silkChildrenDOM[i].style.transform = 'translateY(0px)'
@@ -40,6 +41,43 @@ const silkSmooth = {
                 afterScrollNowDOM.style.transform = 'translateY(0%)'
             } else {
                 _silkChildrenDOM[scrollNowDOMIndex].style.transform = 'translateY(0%)'
+            }
+        }
+        let oldScreenTop = 0
+        let oldScreenTopStay = 0
+        function watcherScroll() {
+            const DOMHeight = document.getElementById('silk-wrap').childNodes[0].offsetHeight
+            const _silkDOM = document.getElementById('silk_scroll')
+            const _silkTop = _silkDOM.offsetTop
+            const screenScrollTop = window.scrollY
+            const silkScroll = screenScrollTop - _silkTop
+            function goSilkChildrenTop() {
+                const nowSilkScrollChildren = silkScroll % DOMHeight
+                if (nowSilkScrollChildren < 200) {
+                    window.scrollTo({
+                        top: screenScrollTop - nowSilkScrollChildren,
+                        behavior: "smooth"
+                    });
+                    return
+                }
+                if (nowSilkScrollChildren > (DOMHeight - 200)) {
+                    window.scrollTo({
+                        top: screenScrollTop + (DOMHeight - nowSilkScrollChildren),
+                        behavior: "smooth"
+                    });
+                    return
+                }
+            }
+            if (silkScroll > 0) {
+                if (oldScreenTop === screenScrollTop) {
+                    if (oldScreenTopStay > 25) {
+                        goSilkChildrenTop()
+                    }
+                    oldScreenTopStay++
+                } else {
+                    oldScreenTopStay = 0
+                    oldScreenTop = screenScrollTop
+                }
             }
         }
     },
