@@ -1,9 +1,12 @@
 const silkSmooth = {
+    _element: '',
     _w: '',
     _d: [],
-    start() {
+    init({ element }) {
+        const _this = this;
+        this._element = element || 'silk_scroll';
         window.addEventListener('load', () => {
-            this._w = document.getElementById('silk_scroll')
+            this._w = document.getElementById(this._element)
             this._d = this._w.children
             this._w.style.height = `${window.innerHeight * this._d.length}px`
             const _dArr = [...this._d]
@@ -17,10 +20,10 @@ const silkSmooth = {
         function scrollPosition() {
             const screenHeight = window.innerHeight
             const screenScrollTop = window.scrollY
-            const _silkDOM = document.getElementById('silk_scroll')
+            // const _silkDOM = document.getElementById(this._element)
             const _silkWrapDOM = document.getElementById('silk-wrap')
             const _silkChildrenDOM = _silkWrapDOM.children
-            const _silkTop = _silkDOM.offsetTop
+            const _silkTop = _this._w.offsetTop
             window.requestAnimationFrame(scrollPosition)
             window.requestAnimationFrame(watcherScroll)
             if (screenScrollTop < _silkTop) {
@@ -47,7 +50,7 @@ const silkSmooth = {
         let oldScreenTopStay = 0
         function watcherScroll() {
             const DOMHeight = document.getElementById('silk-wrap').childNodes[0].offsetHeight
-            const _silkDOM = document.getElementById('silk_scroll')
+            const _silkDOM = document.getElementById(_this._element)
             const _silkTop = _silkDOM.offsetTop
             const screenScrollTop = window.scrollY
             const silkScroll = screenScrollTop - _silkTop
@@ -85,7 +88,7 @@ const silkSmooth = {
         const divWrap = document.createElement("div");
         divWrap.setAttribute('id', 'silk-wrap')
         divWrap.style.cssText = 'position:sticky;top:0px;height:100vh;'
-        document.getElementById('silk_scroll').appendChild(divWrap)
+        document.getElementById(this._element).appendChild(divWrap)
         const _d = [...DOM]
         _d.forEach((item, index) => {
             const newDiv = document.createElement("div");
