@@ -95,3 +95,4 @@ const silkSmooth = {
         })
     }
 }
+export default silkSmooth 
