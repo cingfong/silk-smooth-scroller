@@ -1,51 +1,29 @@
 const silkSmooth = {
-    _element: '',
-    _w: '',
+    elementName: '',
+    element: '',
+    child: '',
+    speed: 1,
+    _reverse: false,
+    _lazy: false,
     _d: [],
-    init({ element }) {
-        const _this = this;
-        this._element = element || 'silk_scroll';
+    // 錯誤反彈
+    init({ name, opposite, speed }) {
+        this.elementName = name || 'silk_scroll';
+        this.speed = speed || 1;
+        // 反轉
+        this._reverse = opposite || false;
         window.addEventListener('load', () => {
-            this._w = document.getElementById(this._element)
-            this._d = this._w.children
-            this._w.style.height = `${window.innerHeight * this._d.length}px`
-            const _dArr = [...this._d]
-            _dArr.forEach(e => {
-                const a = e.offsetHeight
-                this._w.removeChild(e)
-            })
-            window.requestAnimationFrame(scrollPosition)
-            this.createDOM(_dArr)
+            this.element = document.getElementById(this.elementName)
+            this.child = [...this.element.children]
+            while (this.element.firstElementChild) {
+                this.element.removeChild(this.element.firstElementChild)
+            }
+            this.element.style.height = `${window.innerHeight * this.child.length}px`
+            this.createWrap()
+            // 監聽滾動
+            this.watcherScreenScroll()
         })
-        function scrollPosition() {
-            const screenHeight = window.innerHeight
-            const screenScrollTop = window.scrollY
-            // const _silkDOM = document.getElementById(this._element)
-            const _silkWrapDOM = document.getElementById('silk-wrap')
-            const _silkChildrenDOM = _silkWrapDOM.children
-            const _silkTop = _this._w.offsetTop
-            window.requestAnimationFrame(scrollPosition)
-            window.requestAnimationFrame(watcherScroll)
-            if (screenScrollTop < _silkTop) {
-                for (let i = 0; i < _silkChildrenDOM.length; i++) {
-                    _silkChildrenDOM[i].style.transform = 'translateY(0px)'
-                }
-                return
-            }
-            const scrollNowDOMIndex = parseInt((screenScrollTop - _silkTop) / screenHeight)
-            const scrollNowDom = _silkChildrenDOM[scrollNowDOMIndex]
-            const beforeScrollNowDOM = _silkChildrenDOM[scrollNowDOMIndex - 1]
-            const afterScrollNowDOM = _silkChildrenDOM[scrollNowDOMIndex + 1]
-            scrollNowDom.style.transform = `translateY(-${(screenScrollTop - _silkTop) % screenHeight}px)`
-            if (beforeScrollNowDOM) {
-                beforeScrollNowDOM.style.transform = 'translateY(-100%)'
-            }
-            if (afterScrollNowDOM) {
-                afterScrollNowDOM.style.transform = 'translateY(0%)'
-            } else {
-                _silkChildrenDOM[scrollNowDOMIndex].style.transform = 'translateY(0%)'
-            }
-        }
+        //
         let oldScreenTop = 0
         let oldScreenTopStay = 0
         function watcherScroll() {
@@ -56,14 +34,14 @@ const silkSmooth = {
             const silkScroll = screenScrollTop - _silkTop
             function goSilkChildrenTop() {
                 const nowSilkScrollChildren = silkScroll % DOMHeight
-                if (nowSilkScrollChildren < 200) {
+                if (nowSilkScrollChildren < 300) {
                     window.scrollTo({
                         top: screenScrollTop - nowSilkScrollChildren,
                         behavior: "smooth"
                     });
                     return
                 }
-                if (nowSilkScrollChildren > (DOMHeight - 200)) {
+                if (nowSilkScrollChildren > (DOMHeight - 300)) {
                     window.scrollTo({
                         top: screenScrollTop + (DOMHeight - nowSilkScrollChildren),
                         behavior: "smooth"
@@ -84,18 +62,45 @@ const silkSmooth = {
             }
         }
     },
-    createDOM(DOM) {
-        const divWrap = document.createElement("div");
-        divWrap.setAttribute('id', 'silk-wrap')
-        divWrap.style.cssText = 'position:sticky;top:0px;height:100vh;'
-        document.getElementById(this._element).appendChild(divWrap)
-        const _d = [...DOM]
-        _d.forEach((item, index) => {
+    watcherScreenScroll() {
+        const _child = this.child
+        const screenHeight = window.innerHeight
+        const screenScrollTop = window.scrollY
+        const _silkTop = this.element.offsetTop
+        window.requestAnimationFrame(() => this.watcherScreenScroll())
+        if (screenScrollTop < _silkTop) {
+            for (let i = 0; i < _child.length; i++) {
+                _child[i].style.transform = 'translateY(0px)'
+            }
+            return
+        }
+        const scrollNowDomIndex = parseInt((screenScrollTop - _silkTop) / screenHeight)
+        const scrollNowDom = _child[scrollNowDomIndex]
+        const preScrollNowDom = _child[scrollNowDomIndex - 1]
+        const postScrollNowDom = _child[scrollNowDomIndex + 1]
+        scrollNowDom.style.transform = `translateY(-${(screenScrollTop - _silkTop) % screenHeight}px)`
+        if (preScrollNowDom) {
+            preScrollNowDom.style.transform = 'translateY(-100%)'
+        }
+        if (postScrollNowDom) {
+            postScrollNowDom.style.transform = 'translateY(0%)'
+        } else {
+            _child[scrollNowDomIndex].style.transform = 'translateY(0%)'
+        }
+    },
+    createWrap() {
+        const _divWrap = document.createElement("div");
+        _divWrap.setAttribute('id', `${this.elementName}-wrap`)
+        _divWrap.style.cssText = 'position:sticky;top:0px;height:100vh;'
+        this.element.appendChild(_divWrap)
+        const _child = [...this.child]
+        _child.forEach((item, index) => {
             const newDiv = document.createElement("div");
             newDiv.appendChild(item)
-            newDiv.style.cssText = `position: absolute; background-color: white; width: 100vw; height: 100vh; z-index:${99 - index} `
+            newDiv.style.cssText = `position: absolute; backgroundColor: white; width: 100%; height: 100%; z-index: ${99 - index};transition:transform ${1 - this.speed}s linear;`
             document.getElementById('silk-wrap').appendChild(newDiv)
         })
+        this.child = document.getElementById(`${this.elementName}-wrap`).children
     }
 }
 export default silkSmooth 
