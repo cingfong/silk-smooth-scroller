@@ -3,13 +3,19 @@ const silkSmooth = {
     element: '',
     child: '',
     speed: 1,
+    autoAlign: true,
+    autoAlignVariable: {
+        oldScreenTop: 0,
+        oldScreenTopStay: 0
+    },
     _reverse: false,
     _lazy: false,
     _d: [],
     // 錯誤反彈
-    init({ name, opposite, speed }) {
+    init({ name, opposite, speed, align }) {
         this.elementName = name || 'silk_scroll';
         this.speed = speed || 1;
+        this.autoAlign = align === false ? false : true;
         // 反轉
         this._reverse = opposite || false;
         window.addEventListener('load', () => {
@@ -23,59 +29,24 @@ const silkSmooth = {
             // 監聽滾動
             this.watcherSilk()
         })
-        //
-        // let oldScreenTop = 0
-        // let oldScreenTopStay = 0
-        // function watcherScroll() {
-        //     const DOMHeight = document.getElementById('silk-wrap').childNodes[0].offsetHeight
-        //     const _silkDOM = document.getElementById(_this._element)
-        //     const _silkTop = _silkDOM.offsetTop
-        //     const screenScrollTop = window.scrollY
-        //     const silkScroll = screenScrollTop - _silkTop
-        //     function goSilkChildrenTop() {
-        //         const nowSilkScrollChildren = silkScroll % DOMHeight
-        //         if (nowSilkScrollChildren < 300) {
-        //             window.scrollTo({
-        //                 top: screenScrollTop - nowSilkScrollChildren,
-        //                 behavior: "smooth"
-        //             });
-        //             return
-        //         }
-        //         if (nowSilkScrollChildren > (DOMHeight - 300)) {
-        //             window.scrollTo({
-        //                 top: screenScrollTop + (DOMHeight - nowSilkScrollChildren),
-        //                 behavior: "smooth"
-        //             });
-        //             return
-        //         }
-        //     }
-        //     if (silkScroll > 0) {
-        //         if (oldScreenTop === screenScrollTop) {
-        //             if (oldScreenTopStay > 25) {
-        //                 goSilkChildrenTop()
-        //             }
-        //             oldScreenTopStay++
-        //         } else {
-        //             oldScreenTopStay = 0
-        //             oldScreenTop = screenScrollTop
-        //         }
-        //     }
-        // }
     },
     watcherSilk() {
         this.watcherScreenScroll()
+        this.autoAlign && this.watcherAutoAlign()
         window.requestAnimationFrame(() => this.watcherSilk())
     },
     // let oldScreenTop = 0
     // let oldScreenTopStay = 0
-    watcherScroll() {
-        const DOMHeight = document.getElementById('silk-wrap').childNodes[0].offsetHeight
-        const _silkDOM = document.getElementById(_this._element)
-        const _silkTop = _silkDOM.offsetTop
+    watcherAutoAlign() {
+        const _itemHeight = this.child[0].offsetHeight
+        const _silkTop = this.element.offsetTop
         const screenScrollTop = window.scrollY
-        const silkScroll = screenScrollTop - _silkTop
-        function goSilkChildrenTop() {
-            const nowSilkScrollChildren = silkScroll % DOMHeight
+        const _silkScrollStart = screenScrollTop - _silkTop
+        const _afterSilkScrollStart = this.element.nextSibling?.offsetTop
+        const _globalAutoAlign = this.autoAlignVariable
+        function silkAutoAlign() {
+            const nowSilkScrollChildren = _silkScrollStart % _itemHeight
+            // 自動向下校正校正
             if (nowSilkScrollChildren < 300) {
                 window.scrollTo({
                     top: screenScrollTop - nowSilkScrollChildren,
@@ -83,23 +54,26 @@ const silkSmooth = {
                 });
                 return
             }
-            if (nowSilkScrollChildren > (DOMHeight - 300)) {
+            // 若超過silk元素不校正
+            if (_afterSilkScrollStart) return
+            if (nowSilkScrollChildren > (_itemHeight - 300)) {
                 window.scrollTo({
-                    top: screenScrollTop + (DOMHeight - nowSilkScrollChildren),
+                    top: screenScrollTop + (_itemHeight - nowSilkScrollChildren),
                     behavior: "smooth"
                 });
                 return
             }
         }
-        if (silkScroll > 0) {
-            if (oldScreenTop === screenScrollTop) {
-                if (oldScreenTopStay > 25) {
-                    goSilkChildrenTop()
+        // 停留判斷
+        if (_silkScrollStart > 0) {
+            if (_globalAutoAlign.oldScreenTop === screenScrollTop) {
+                if (_globalAutoAlign.oldScreenTopStay > 25) {
+                    silkAutoAlign()
                 }
-                oldScreenTopStay++
+                _globalAutoAlign.oldScreenTopStay++
             } else {
-                oldScreenTopStay = 0
-                oldScreenTop = screenScrollTop
+                _globalAutoAlign.oldScreenTopStay = 0
+                _globalAutoAlign.oldScreenTop = screenScrollTop
             }
         }
     },
