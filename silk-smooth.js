@@ -13,8 +13,8 @@ const silkSmooth = {
     _lazy: false,
     _d: [],
     // 錯誤反彈
-    init({ name, opposite, speed, align, alignHeight }) {
-        this.elementName = name || 'silk_scroll';
+    init({ name, opposite, speed, align, alignHeight } = {}) {
+        this.elementName = name || 'silk-smooth';
         this.speed = speed || 1;
         this.autoAlign = align === false ? false : true;
         this.autoAlignVariable.alignHeight = alignHeight || 300;
@@ -114,8 +114,8 @@ const silkSmooth = {
         _child.forEach((item, index) => {
             const newDiv = document.createElement("div");
             newDiv.appendChild(item)
-            newDiv.style.cssText = `position: absolute; backgroundColor: white; width: 100%; height: 100%; z-index: ${99 - index};transition:transform ${1 - this.speed}s linear;`
-            document.getElementById('silk-wrap').appendChild(newDiv)
+            newDiv.style.cssText = `position: absolute; backgroundColor: white; width: 100%; min-height:100%;height: 100%; z-index: ${99 - index};transition:transform ${1 - this.speed}s linear;`
+            document.getElementById(`${this.elementName}-wrap`).appendChild(newDiv)
         })
         this.child = document.getElementById(`${this.elementName}-wrap`).children
     }

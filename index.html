@@ -6,47 +6,27 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./silk-smooth.css" rel="stylesheet">
-    <link href="./one.css" rel="stylesheet">
-    <link href="./two.css" rel="stylesheet">
-    <link href="./three.css" rel="stylesheet">
-    <title>Document</title>
+    <title>silk-smooth</title>
 </head>
 
 <body>
-    <h1 style="height:200px;color:white;background-color: black;">asdasd</h1>
-    <div id="silk">
-        <div class="container1">
-            <img style="width:100%;height:100%"
-                src="https://fsgworkinprogress.com/wp-content/uploads/2020/02/2020-02-13.jpg">
-        </div>
-        <div class="container2">
-            <img style="width:100%;height:100%;" src="https://jjphoto.tw/wp-content/uploads/20180101174004_9.jpg">
-        </div>
-        <div class="container3">
-            <img style="width:100%;height:100%;"
-                src="https://storage.googleapis.com/smiletaiwan-cms-cwg-tw/article/202105/article-60b08aa138287.jpg">
-        </div>
-        <div class="container4">
-            <img style="width:100%;height:100%;"
-                src="https://www.10wallpaper.com/wallpaper/1366x768/1302/starry_sky-Lakeside_scenery_HD_wallpapers_1366x768.jpg">
-        </div>
-        <div class="container5">
-            <img style="width:100%;height:100%;" src="https://images8.alphacoders.com/797/797958.jpg">
-        </div>
-        <div class="container6">
-            <img style="width:100%;height:100%;" src="https://s4.ax1x.com/2021/12/21/TQKFo9.jpg">
-        </div>
+
+    <head>
+        <h1>silk-smooth</h1>
+    </head>
+    <div id="silk-smooth">
+        <div class="container container1"></div>
+        <div class="container container2"></div>
+        <div class="container container3"></div>
+        <div class="container container4"></div>
+        <div class="container container5"></div>
     </div>
-    <h1 style="height:200px;color:white;background-color: black;">asdasd1</h1>
-    <h1 style="height:200px;color:white;background-color: black;">asdasd2</h1>
-    <h1 style="height:200px;color:white;background-color: black;">asdasd3</h1>
-    <h1 style="height:200px;color:white;background-color: black;">asdasd4</h1>
-    <h1 style="height:200px;color:white;background-color: black;">asdasd5</h1>
-    <h1 style="height:200px;color:white;background-color: black;">asdasd6</h1>
-    <h1 style="height:200px;color:white;background-color: black;">asdasd7</h1>
+    <footer>
+        <h1>footer</h1>
+    </footer>
     <script type="module">
         import silk from './silk-smooth.js'
-        silk.init({ name: 'silk', opposite: true })
+        silk.init()
     </script>
 </body>
 
@@ -60,49 +40,37 @@
     h1 {
         margin: 0px;
         padding: 0px;
+        font-size: 40px;
+        height: 200px;
+        color: white;
+        background-color: black;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    #silk_scroll {
-        position: relative;
+    .container {
+        display: block;
+        height: 100%;
     }
 
-    #silk_scroll>* {
-        height: 100vh;
-        margin: 0px;
-        padding: 0px;
+    .container1 {
+        background: linear-gradient(#F2F3AE, #EDD382);
     }
 
-    img {
-        background-size: cover;
+    .container2 {
+        background: linear-gradient(#F5B969, #F9AC5C);
+    }
+
+    .container3 {
+        background: linear-gradient(#FC9E4F, #F8713F);
     }
 
     .container4 {
-        height: 100vh;
-        width: 100%;
-        background-color: gray;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: pink;
+        background: linear-gradient(#F65B37, #F4442E);
     }
 
     .container5 {
-        height: 100vh;
-        width: 100%;
-        background-color: gray;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: purple;
-    }
-
-    .container6 {
-        height: 100vh;
-        width: 100%;
-        background-color: gray;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background-color: turquoise;
+        background: linear-gradient(#7B2328, #020122);
     }
 </style>
