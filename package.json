@@ -1,0 +1,23 @@
+{
+  "name": "silk-smooth-scroll",
+  "description": "Element silk smooth replacement",
+  "main": "silk-smooth.js",
+  "keywords": [
+    "silk",
+    "smooth slider"
+  ],
+  "version": "0.0.1",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cingfong/silk-smooth-scroller.git"
+  },
+  "author": "cingfong <cingfong311@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cingfong/silk-smooth-scroller/issues"
+  },
+  "homepage": "https://github.com/cingfong/silk-smooth-scroller#readme"
+}
