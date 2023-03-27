@@ -128,4 +128,4 @@ const silkSmooth = {
         this.child = document.getElementById(`${this.elementName}-wrap`).children
     }
 }
-// export default silkSmooth 
+export default silkSmooth 
