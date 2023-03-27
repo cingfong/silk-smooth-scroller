@@ -9,18 +9,18 @@ const silkSmooth = {
         oldScreenTopStay: 0,
         alignHeight: 0,
     },
-    _reverse: false,
+    direction: false,
     _lazy: false,
     _d: [],
     // 錯誤反彈
-    init({ name, opposite, speed, align, alignHeight } = {}) {
+    init({ name, direction, speed, align, alignHeight } = {}) {
         this.elementName = name || 'silk-smooth';
         this.speed = speed || 1;
         this.autoAlign = align === false ? false : true;
         this.autoAlignVariable.alignHeight = alignHeight || 300;
         // 反轉
-        this._reverse = opposite || false;
-        window.addEventListener('load', () => {
+        this.direction = direction || false;
+        const active = () => {
             this.element = document.getElementById(this.elementName)
             this.child = [...this.element.children]
             while (this.element.firstElementChild) {
@@ -30,6 +30,14 @@ const silkSmooth = {
             this.createWrap()
             // 監聽滾動
             this.watcherSilk()
+        }
+        const _DOM = document.getElementById(name)
+        if (_DOM) {
+            active()
+            return
+        }
+        window.addEventListener('load', () => {
+            active()
         })
     },
     watcherSilk() {
@@ -95,7 +103,7 @@ const silkSmooth = {
         const scrollNowDom = _child[scrollNowDomIndex]
         const preScrollNowDom = _child[scrollNowDomIndex - 1]
         const postScrollNowDom = _child[scrollNowDomIndex + 1]
-        scrollNowDom.style.transform = `translateY(-${(screenScrollTop - _silkTop) % screenHeight}px)`
+        scrollNowDom.style.transform = `translateY(${this.direction ? '+' : '-'}${(screenScrollTop - _silkTop) % screenHeight}px)`
         if (preScrollNowDom) {
             preScrollNowDom.style.transform = 'translateY(-100%)'
         }
@@ -120,4 +128,4 @@ const silkSmooth = {
         this.child = document.getElementById(`${this.elementName}-wrap`).children
     }
 }
-export default silkSmooth 
+// export default silkSmooth 

@@ -15,18 +15,18 @@
         <h1>silk-smooth</h1>
     </head>
     <div id="silk-smooth">
-        <div class="container container1"></div>
-        <div class="container container2"></div>
-        <div class="container container3"></div>
-        <div class="container container4"></div>
-        <div class="container container5"></div>
+        <div class="container container1">A</div>
+        <div class="container container2">B</div>
+        <div class="container container3">C</div>
+        <div class="container container4">D</div>
+        <div class="container container5">E</div>
     </div>
     <footer>
         <h1>footer</h1>
     </footer>
-    <script type="module">
-        import silk from './silk-smooth.js'
-        silk.init()
+    <script src="./silk-smooth.js"></script>
+    <script>
+        silkSmooth.init()
     </script>
 </body>
 
@@ -50,8 +50,14 @@
     }
 
     .container {
+        color: white;
         display: block;
         height: 100%;
+        font-size: 60px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .container1 {
