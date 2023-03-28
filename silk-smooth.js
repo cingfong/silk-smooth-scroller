@@ -50,7 +50,8 @@ const silkSmooth = {
         const _silkTop = this.element.offsetTop
         const _screenScrollTop = window.scrollY
         const _silkScrollStart = _screenScrollTop - _silkTop
-        const _afterSilkScrollStart = this.element.nextElementSibling?.offsetTop
+        if (!this.element.nextElementSibling) return
+        const _afterSilkScrollStart = this.element.nextElementSibling.offsetTop
         const _globalAutoAlign = this.autoAlignVariable
         // 若超過silk元素不校正
         if (_screenScrollTop > (_afterSilkScrollStart - _itemHeight)) return
@@ -90,7 +91,8 @@ const silkSmooth = {
         const screenHeight = window.innerHeight
         const screenScrollTop = window.scrollY
         const _silkTop = this.element.offsetTop
-        const _afterSilkScrollStart = this.element.nextElementSibling?.offsetTop
+        if (!this.element.nextElementSibling) return
+        const _afterSilkScrollStart = this.element.nextElementSibling.offsetTop
         // 若超過silk元素不校正
         if (screenScrollTop >= _afterSilkScrollStart) return
         if (screenScrollTop < _silkTop) {

@@ -1,26 +1,35 @@
-# silk-smooth
+# silk-smooth-scroll
+
+This is an element that changes its content when the scroll is moved.
 
 ## Installation
 
-CDN
+<!--
+Browser ENV
 
 ```html
 <script src="https://raw.githubusercontent.com/cingfong/silk-smooth-scroller/master/silk-smooth.js"></script>
-<script>
-  silkSmooth.init();
-</script>
-```
+``` -->
 
-<!-- NPM
+NPM
+
 ```bash
 npm install silk-smooth-scroll
-``` -->
+```
+
+You can get the latest code:
+
+```bash
+git clone https://github.com/cingfong/silk-smooth-scroller.git
+```
+
+or just [download archive](https://github.com/cingfong/silk-smooth-scroller/archive/refs/heads/master.zip)
 
 ## Usage
 
+element
 ```html
 <div id="silk-smooth">
-  <!-- // default div height 100vh -->
   <div></div>
   <div></div>
   <div></div>
@@ -28,6 +37,22 @@ npm install silk-smooth-scroll
   <div></div>
 </div>
 ```
+
+Browser ENV
+
+```html
+<script>
+  silkSmooth.init();
+</script>
+```
+
+NPM
+
+```javascript
+import silkSmooth from 'silk-smooth-scroll'
+silkSmooth.init()
+```
+
 
 ## Options
 
@@ -39,7 +64,7 @@ const options = {
   alignHeight: 300, // align auto height
   direction: false, // feeding direction
 };
-silk.init(options);
+silkSmooth.init(options);
 ```
 
-### if you want to see a demo, please clone
+## [DEMO]()
