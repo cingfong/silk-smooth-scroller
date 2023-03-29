@@ -1,4 +1,5 @@
 const silkSmooth = {
+    initLoad: false,
     elementName: '',
     element: '',
     child: '',
@@ -105,6 +106,7 @@ const silkSmooth = {
         const scrollNowDom = _child[scrollNowDomIndex]
         const preScrollNowDom = _child[scrollNowDomIndex - 1]
         const postScrollNowDom = _child[scrollNowDomIndex + 1]
+        this.initDomPosition(scrollNowDomIndex)
         scrollNowDom.style.transform = `translateY(${this.direction ? '+' : '-'}${(screenScrollTop - _silkTop) % screenHeight}px)`
         if (preScrollNowDom) {
             preScrollNowDom.style.transform = 'translateY(-100%)'
@@ -128,6 +130,13 @@ const silkSmooth = {
             document.getElementById(`${this.elementName}-wrap`).appendChild(newDiv)
         })
         this.child = document.getElementById(`${this.elementName}-wrap`).children
+    },
+    initDomPosition(nowIdx) {
+        if (this.initLoad) return
+        for (let i = 0; i < (nowIdx - 1); i++) {
+            this.child[i].style.transform = 'translateY(-100%)'
+        }
+        this.initLoad = true
     }
 }
 export default silkSmooth 
