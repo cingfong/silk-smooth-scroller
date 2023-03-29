@@ -36,7 +36,7 @@ Browser ENV
 
 ```html
 <script type="module">
-  import silk from "https://cdn.jsdelivr.net/gh/cingfong/silk-smooth-scroller/silk-smooth.js";
+  import silkSmooth from "https://cdn.jsdelivr.net/gh/cingfong/silk-smooth-scroller/silk-smooth.js";
   silkSmooth.init();
 </script>
 ```
@@ -61,4 +61,4 @@ const options = {
 silkSmooth.init(options);
 ```
 
-## [DEMO](https://stackblitz.com/edit/web-platform-7tgajt)
+## [DEMO](https://stackblitz.com/edit/web-platform-7tgajt?file=index.html)
