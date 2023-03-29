@@ -4,13 +4,6 @@ This is an element that changes its content when the scroll is moved.
 
 ## Installation
 
-<!--
-Browser ENV
-
-```html
-<script src="https://raw.githubusercontent.com/cingfong/silk-smooth-scroller/master/silk-smooth.js"></script>
-``` -->
-
 NPM
 
 ```bash
@@ -28,6 +21,7 @@ or just [download archive](https://github.com/cingfong/silk-smooth-scroller/arch
 ## Usage
 
 element
+
 ```html
 <div id="silk-smooth">
   <div></div>
@@ -41,7 +35,8 @@ element
 Browser ENV
 
 ```html
-<script>
+<script type="module">
+  import silk from "https://cdn.jsdelivr.net/gh/cingfong/silk-smooth-scroller/silk-smooth.js";
   silkSmooth.init();
 </script>
 ```
@@ -49,10 +44,9 @@ Browser ENV
 NPM
 
 ```javascript
-import silkSmooth from 'silk-smooth-scroll'
-silkSmooth.init()
+import silkSmooth from "silk-smooth-scroll";
+silkSmooth.init();
 ```
-
 
 ## Options
 
@@ -67,4 +61,4 @@ const options = {
 silkSmooth.init(options);
 ```
 
-## [DEMO]()
+## [DEMO](https://stackblitz.com/edit/web-platform-7tgajt)
