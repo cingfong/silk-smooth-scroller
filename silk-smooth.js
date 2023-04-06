@@ -11,16 +11,19 @@ const silkSmooth = {
         alignHeight: 0,
     },
     direction: false,
+    titleList: [],
+    titleClassName: '',
     _lazy: false,
     _d: [],
     // 錯誤反彈
-    init({ name, direction, speed, align, alignHeight } = {}) {
+    init({ name, direction, speed, align, alignHeight, titleList, titleClassName } = {}) {
         this.elementName = name || 'silk-smooth';
         this.speed = speed || 1;
         this.autoAlign = align === false ? false : true;
         this.autoAlignVariable.alignHeight = alignHeight || 300;
-        // 反轉
         this.direction = direction || false;
+        this.titleList = [...titleList]
+        this.titleClassName = titleClassName
         const active = () => {
             this.element = document.getElementById(this.elementName)
             this.child = [...this.element.children]
@@ -118,15 +121,42 @@ const silkSmooth = {
         }
     },
     createWrap() {
-        const _divWrap = document.createElement("div");
+        const createDOM = (label, text, attr) => {
+            const DOM = document.createElement(label)
+            if (text) DOM.textContent = text
+            if (attr) {
+                for (const key in attr) {
+                    DOM[key] = attr[key]
+                }
+            }
+            return DOM
+        }
+        const _divWrap = createDOM("div");
         _divWrap.setAttribute('id', `${this.elementName}-wrap`)
         _divWrap.style.cssText = 'position:sticky;top:0px;height:100vh;'
         this.element.appendChild(_divWrap)
         const _child = [...this.child]
+        let titleTotalHeight = 0
         _child.forEach((item, index) => {
-            const newDiv = document.createElement("div");
+            const titleItem = this.titleList[index]
+            const newDiv = createDOM("div");
             newDiv.appendChild(item)
-            newDiv.style.cssText = `position: absolute; backgroundColor: white; width: 100%; min-height:100%;height: 100%; z-index: ${99 - index};transition:transform ${1 - this.speed}s linear;`
+            // 沒標題不新增
+            // 需要讓dom已經生成置html再算高度
+            if (Object.keys(this.titleList[index]).length) {
+                const newP = createDOM('div', titleItem.text, { className: this.titleClassName });
+                newP.style.cssText = 'position:absolute;top:100%;transform:translateY(-100%)'
+                const newB = createDOM('b', titleItem.number);
+                newP.prepend(newB)
+                newDiv.appendChild(newP)
+                // 等害appendChild載入完成
+                // setTimeout(() => {
+                // const titleItemHeight = newP.clientHeight
+                // titleTotalHeight += titleItemHeight
+                // console.log(titleItemHeight)
+                // })
+            }
+            newDiv.style.cssText = `position: absolute; backgroundColor: white; width: 100%; height: calc(100% - ${titleTotalHeight}px); z-index: ${99 - index};transition:transform ${1 - this.speed}s linear;`
             document.getElementById(`${this.elementName}-wrap`).appendChild(newDiv)
         })
         this.child = document.getElementById(`${this.elementName}-wrap`).children
