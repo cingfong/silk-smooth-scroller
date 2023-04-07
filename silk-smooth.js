@@ -136,28 +136,36 @@ const silkSmooth = {
         _divWrap.style.cssText = 'position:sticky;top:0px;height:100vh;'
         this.element.appendChild(_divWrap)
         const _child = [...this.child]
-        let titleTotalHeight = 0
+        const titleHeightList = []
         _child.forEach((item, index) => {
             const titleItem = this.titleList[index]
             const newDiv = createDOM("div");
             newDiv.appendChild(item)
-            // 沒標題不新增
-            // 需要讓dom已經生成置html再算高度
             if (Object.keys(this.titleList[index]).length) {
                 const newP = createDOM('div', titleItem.text, { className: this.titleClassName });
-                newP.style.cssText = 'position:absolute;top:100%;transform:translateY(-100%)'
+                newP.style.cssText = 'position:absolute;bottom:0px;'
                 const newB = createDOM('b', titleItem.number);
                 newP.prepend(newB)
                 newDiv.appendChild(newP)
                 // 等害appendChild載入完成
-                // setTimeout(() => {
-                // const titleItemHeight = newP.clientHeight
-                // titleTotalHeight += titleItemHeight
-                // console.log(titleItemHeight)
-                // })
+                setTimeout(() => {
+                    const titleItemHeight = newP.clientHeight
+                    titleHeightList.push(titleItemHeight)
+                })
+            } else {
+                titleHeightList.push(0)
             }
-            newDiv.style.cssText = `position: absolute; backgroundColor: white; width: 100%; height: calc(100% - ${titleTotalHeight}px); z-index: ${99 - index};transition:transform ${1 - this.speed}s linear;`
+            newDiv.style.cssText = `position: absolute; backgroundColor: white; width: 100%; height: 100%; z-index: ${99 - index};transition:transform ${1 - this.speed}s linear;`
             document.getElementById(`${this.elementName}-wrap`).appendChild(newDiv)
+        })
+        setTimeout(() => {
+            let titleHeightTotal = 0
+            const _childReverse = [..._child].reverse()
+            _childReverse.forEach((item, index) => {
+                const titleHeightItem = titleHeightList[index] || 0
+                titleHeightTotal += titleHeightItem
+                item.parentNode.style.cssText += `height:calc(100% - ${titleHeightTotal}px)`
+            })
         })
         this.child = document.getElementById(`${this.elementName}-wrap`).children
     },
