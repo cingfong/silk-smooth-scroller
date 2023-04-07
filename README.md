@@ -51,12 +51,22 @@ silkSmooth.init();
 ## Options
 
 ```javascript
+// page title
+const _title = [
+  {},
+  { number: 1.1, text: "title first" },
+  { number: 1.2, text: "title second" },
+  { number: 1.3, text: "title third" },
+  { number: 1.4, text: "title fourth" },
+];
 const options = {
   name: "silk-smooth", // element id name
   speed: 1, // scroll speed
   align: true, // auto align
   alignHeight: 300, // align auto height
   direction: false, // feeding direction
+  titleClassName: "silk-smooth-title", // set title class
+  titleList: _title,
 };
 silkSmooth.init(options);
 ```
