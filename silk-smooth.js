@@ -58,30 +58,34 @@ const silkSmooth = {
         const _afterSilkScrollStart = this.element.nextElementSibling.offsetTop
         const _globalAutoAlign = this.autoAlignVariable
         // 若超過silk元素不校正
+        // 減去最後一個子元素的高度
         if (_screenScrollTop > (_afterSilkScrollStart - _itemHeight)) return
         function silkAutoAlign() {
-            const nowSilkScrollChildren = _silkScrollStart % _itemHeight
-            // 自動向下校正校正
-            if (nowSilkScrollChildren < _globalAutoAlign.alignHeight) {
-                window.scrollTo({
-                    top: _screenScrollTop - nowSilkScrollChildren,
-                    behavior: "smooth"
-                });
-                return
+            let _nowSilkScrollTop = 0
+            let _nextSilkScrollTop = _silkScrollStart
+            const _child = [...this.child]
+            let whileIndex = 0
+            while (_nextSilkScrollTop > 0) {
+                _nextSilkScrollTop -= _child[whileIndex].offsetHeight
+                if (Math.abs(_nextSilkScrollTop) < _globalAutoAlign.alignHeight) {
+                    _nowSilkScrollTop = _nextSilkScrollTop
+                }
+                if (_silkScrollStart < _globalAutoAlign.alignHeight) {
+                    _nowSilkScrollTop = _silkScrollStart
+                }
+                whileIndex++
             }
-            if (nowSilkScrollChildren > (_itemHeight - _globalAutoAlign.alignHeight)) {
-                window.scrollTo({
-                    top: _screenScrollTop + (_itemHeight - nowSilkScrollChildren),
-                    behavior: "smooth"
-                });
-                return
-            }
+            window.scrollTo({
+                top: _screenScrollTop - _nowSilkScrollTop,
+                behavior: "smooth"
+            });
+            return
         }
         // 停留判斷
         if (_silkScrollStart > 0) {
             if (_globalAutoAlign.oldScreenTop === _screenScrollTop) {
                 if (_globalAutoAlign.oldScreenTopStay > 25) {
-                    silkAutoAlign()
+                    silkAutoAlign.call(this)
                 }
                 _globalAutoAlign.oldScreenTopStay++
             } else {
@@ -91,8 +95,7 @@ const silkSmooth = {
         }
     },
     watcherScreenScroll() {
-        const _child = this.child
-        const screenHeight = window.innerHeight
+        const _child = [...this.child]
         const screenScrollTop = window.scrollY
         const _silkTop = this.element.offsetTop
         if (!this.element.nextElementSibling) return
@@ -105,12 +108,20 @@ const silkSmooth = {
             }
             return
         }
-        const scrollNowDomIndex = parseInt((screenScrollTop - _silkTop) / screenHeight)
+        let nowSilkScrollTop = screenScrollTop - _silkTop
+        let whileIndex = 0
+        while (nowSilkScrollTop > 0) {
+            nowSilkScrollTop -= _child[whileIndex].offsetHeight
+            whileIndex++
+        }
+        const scrollNowDomIndex = whileIndex - 1
+        if (scrollNowDomIndex < 0 || whileIndex >= _child.length) return
+        const silkScrollTop = nowSilkScrollTop + _child[scrollNowDomIndex].offsetHeight
         const scrollNowDom = _child[scrollNowDomIndex]
         const preScrollNowDom = _child[scrollNowDomIndex - 1]
         const postScrollNowDom = _child[scrollNowDomIndex + 1]
         this.initDomPosition(scrollNowDomIndex)
-        scrollNowDom.style.transform = `translateY(${this.direction ? '+' : '-'}${(screenScrollTop - _silkTop) % screenHeight}px)`
+        scrollNowDom.style.transform = `translateY(${this.direction ? '+' : '-'}${silkScrollTop}px)`
         if (preScrollNowDom) {
             preScrollNowDom.style.transform = 'translateY(-100%)'
         }
@@ -136,28 +147,40 @@ const silkSmooth = {
         _divWrap.style.cssText = 'position:sticky;top:0px;height:100vh;'
         this.element.appendChild(_divWrap)
         const _child = [...this.child]
-        let titleTotalHeight = 0
+        const titleHeightList = []
         _child.forEach((item, index) => {
             const titleItem = this.titleList[index]
             const newDiv = createDOM("div");
             newDiv.appendChild(item)
-            // 沒標題不新增
-            // 需要讓dom已經生成置html再算高度
-            if (Object.keys(this.titleList[index]).length) {
-                const newP = createDOM('div', titleItem.text, { className: this.titleClassName });
-                newP.style.cssText = 'position:absolute;top:100%;transform:translateY(-100%)'
-                const newB = createDOM('b', titleItem.number);
-                newP.prepend(newB)
-                newDiv.appendChild(newP)
-                // 等害appendChild載入完成
-                // setTimeout(() => {
-                // const titleItemHeight = newP.clientHeight
-                // titleTotalHeight += titleItemHeight
-                // console.log(titleItemHeight)
-                // })
-            }
-            newDiv.style.cssText = `position: absolute; backgroundColor: white; width: 100%; height: calc(100% - ${titleTotalHeight}px); z-index: ${99 - index};transition:transform ${1 - this.speed}s linear;`
+            // 等害appendChild載入完成
+            setTimeout(() => {
+                if (Object.keys(this.titleList[index]).length) {
+                    const newP = createDOM('div', titleItem.text, { className: this.titleClassName });
+                    newP.style.cssText = 'position:absolute;bottom:0px;'
+                    const newB = createDOM('b', titleItem.number);
+                    newP.prepend(newB)
+                    newDiv.appendChild(newP)
+                    const titleItemHeight = newP.clientHeight
+                    titleHeightList.push(titleItemHeight)
+                } else {
+                    titleHeightList.push(0)
+                }
+            })
+            newDiv.style.cssText = `position: absolute; backgroundColor: white; width: 100%; height: 100%; z-index: ${99 - index};transition:transform ${1 - this.speed}s linear;`
             document.getElementById(`${this.elementName}-wrap`).appendChild(newDiv)
+        })
+        setTimeout(() => {
+            let titleHeightTotal = 0
+            let _childHeightTotal = 0
+            const _childReverse = [..._child].reverse()
+            const titleHeightListReverse = titleHeightList.reverse()
+            _childReverse.forEach((item, index) => {
+                const titleHeightItem = titleHeightListReverse[index] || 0
+                item.parentNode.style.cssText += `height:calc(100% - ${titleHeightTotal}px)`
+                titleHeightTotal += titleHeightItem
+                _childHeightTotal += item.offsetHeight
+            })
+            this.element.style.cssText += `height:${_childHeightTotal}px`
         })
         this.child = document.getElementById(`${this.elementName}-wrap`).children
     },

@@ -65,7 +65,8 @@ const options = {
   align: true, // auto align
   alignHeight: 300, // align auto height
   direction: false, // feeding direction
-  titleList: _title
+  titleClassName: "silk-smooth-title", // set title class
+  titleList: _title,
 };
 silkSmooth.init(options);
 ```
