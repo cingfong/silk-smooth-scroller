@@ -71,4 +71,4 @@ const options = {
 silkSmooth.init(options);
 ```
 
-## [DEMO](https://stackblitz.com/edit/web-platform-7tgajt?file=index.html)
+## [DEMO](https://jsfiddle.net/cingfong/r0ubmt3h/3/)
