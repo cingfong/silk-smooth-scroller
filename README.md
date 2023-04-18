@@ -62,7 +62,7 @@ const _title = [
 const options = {
   name: "silk-smooth",                  // element id name
   speed: 1,                             // scroll speed
-  transformFunction: 'ease-in-out'      // set scroll transition-timing-function, default linear 
+  transformFunction: 'ease-in-out',     // set scroll transition-timing-function, default linear 
   align: true,                          // scroll auto align
   alignHeight: 300,                     // scroll auto align height
   direction: false,                     // feeding direction
