@@ -13,10 +13,9 @@ const silkSmooth = {
     direction: false,
     titleList: [],
     titleClassName: '',
-    _lazy: false,
-    _d: [],
+    transformTimingFun: '',
     // 錯誤反彈
-    init({ name, direction, speed, align, alignHeight, titleList, titleClassName } = {}) {
+    init({ name, direction, speed, align, alignHeight, titleList, titleClassName, transformFunction } = {}) {
         this.elementName = name || 'silk-smooth';
         this.speed = speed || 1;
         this.autoAlign = align === false ? false : true;
@@ -24,6 +23,7 @@ const silkSmooth = {
         this.direction = direction || false;
         this.titleList = [...titleList]
         this.titleClassName = titleClassName
+        this.transformTimingFun = transformFunction || 'linear'
         const active = () => {
             this.element = document.getElementById(this.elementName)
             this.child = [...this.element.children]
@@ -166,7 +166,14 @@ const silkSmooth = {
                     titleHeightList.push(0)
                 }
             })
-            newDiv.style.cssText = `position: absolute; backgroundColor: white; width: 100%; height: 100%; z-index: ${99 - index};transition:transform ${1 - this.speed}s linear;`
+            const newDivCssText = `position: absolute; 
+                                    backgroundColor: white; 
+                                    width: 100%; 
+                                    height: 100%; 
+                                    z-index: ${99 - index};
+                                    transition: transform ${1 - this.speed}s;
+                                    transition-timing-function: ${this.transformTimingFun};`
+            newDiv.style.cssText = newDivCssText
             document.getElementById(`${this.elementName}-wrap`).appendChild(newDiv)
         })
         setTimeout(() => {

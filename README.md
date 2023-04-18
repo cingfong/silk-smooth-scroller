@@ -60,13 +60,14 @@ const _title = [
   { number: 1.4, text: "title fourth" },
 ];
 const options = {
-  name: "silk-smooth", // element id name
-  speed: 1, // scroll speed
-  align: true, // auto align
-  alignHeight: 300, // align auto height
-  direction: false, // feeding direction
-  titleClassName: "silk-smooth-title", // set title class
-  titleList: _title,
+  name: "silk-smooth",                  // element id name
+  speed: 1,                             // scroll speed
+  transformFunction: 'ease-in-out'      // set scroll transition-timing-function, default linear 
+  align: true,                          // scroll auto align
+  alignHeight: 300,                     // scroll auto align height
+  direction: false,                     // feeding direction
+  titleClassName: "silk-smooth-title",  // set title class
+  titleList: _title,                    // set each title
 };
 silkSmooth.init(options);
 ```
