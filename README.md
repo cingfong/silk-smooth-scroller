@@ -61,15 +61,24 @@ const _title = [
 ];
 const options = {
   name: "silk-smooth",                  // element id name
-  speed: 1,                             // scroll speed
+  speed: 1,                             // scroll speed transition second
   transformFunction: 'ease-in-out',     // set scroll transition-timing-function, default linear 
   align: true,                          // scroll auto align
   alignHeight: 300,                     // scroll auto align height
-  direction: false,                     // feeding direction
+  direction: false,                     // scroll direction
   titleClassName: "silk-smooth-title",  // set title class
   titleList: _title,                    // set each title
 };
 silkSmooth.init(options);
 ```
 
-## [DEMO](https://jsfiddle.net/cingfong/r0ubmt3h/3/)
+## Reload
+
+```javascript
+// If you want to reload, you can use this method
+silkSmooth.remove();
+
+silkSmooth.init();
+```
+
+## [DEMO](https://display-library.vercel.app/silk-smooth-scroll)

@@ -1,9 +1,8 @@
 const silkSmooth = {
-  initLoad: false,
   elementName: "",
   element: "",
   child: "",
-  speed: 1,
+  speed: 0,
   autoAlign: true,
   autoAlignVariable: {
     oldScreenTop: 0,
@@ -14,6 +13,7 @@ const silkSmooth = {
   titleList: [],
   titleClassName: "",
   transformTimingFun: "",
+  scrollAnimation: "",
   // 錯誤反彈
   init({
     name,
@@ -26,7 +26,7 @@ const silkSmooth = {
     transformFunction,
   } = {}) {
     this.elementName = name || "silk-smooth";
-    this.speed = speed || 1;
+    this.speed = speed || 0;
     this.autoAlign = align === false ? false : true;
     this.autoAlignVariable.alignHeight = alignHeight || 300;
     this.direction = direction || false;
@@ -49,14 +49,23 @@ const silkSmooth = {
       active();
       return;
     }
+    if (!_DOM) {
+      setTimeout(() => {
+        active();
+      });
+      return;
+    }
     window.addEventListener("load", () => {
       active();
+      return;
     });
   },
   watcherSilk() {
     this.watcherScreenScroll();
     this.autoAlign && this.watcherAutoAlign();
-    window.requestAnimationFrame(() => this.watcherSilk());
+    this.scrollAnimation = window.requestAnimationFrame(() =>
+      this.watcherSilk()
+    );
   },
   watcherAutoAlign() {
     const _itemHeight = this.child[0].offsetHeight;
@@ -124,7 +133,7 @@ const silkSmooth = {
       whileIndex++;
     }
     const scrollNowDomIndex = whileIndex - 1;
-    if (scrollNowDomIndex < 0 || whileIndex >= _child.length) return;
+    if (scrollNowDomIndex < 0 || whileIndex > _child.length) return;
     const silkScrollTop =
       nowSilkScrollTop + _child[scrollNowDomIndex].offsetHeight;
     const scrollNowDom = _child[scrollNowDomIndex];
@@ -166,7 +175,7 @@ const silkSmooth = {
       newDiv.appendChild(item);
       // 等害appendChild載入完成
       setTimeout(() => {
-        if (Object.keys(this.titleList[index]).length) {
+        if (Object.keys(this.titleList[index] || {}).length) {
           const newP = createDOM("div", titleItem.text, {
             className: this.titleClassName,
           });
@@ -185,7 +194,7 @@ const silkSmooth = {
                                     width: 100%; 
                                     height: 100%; 
                                     z-index: ${99 - index};
-                                    transition: transform ${1 - this.speed}s;
+                                    transition: transform ${this.speed}s;
                                     transition-timing-function: ${
                                       this.transformTimingFun
                                     };`;
@@ -199,7 +208,9 @@ const silkSmooth = {
       const titleHeightListReverse = titleHeightList.reverse();
       _childReverse.forEach((item, index) => {
         const titleHeightItem = titleHeightListReverse[index] || 0;
-        item.parentNode.style.cssText += `height:calc(100% - ${titleHeightTotal}px)`;
+        item.parentNode.style.cssText += `height:calc(100% - ${
+          this.direction ? 0 : titleHeightTotal
+        }px)`;
         titleHeightTotal += titleHeightItem;
         _childHeightTotal += item.offsetHeight;
       });
@@ -208,11 +219,22 @@ const silkSmooth = {
     this.child = document.getElementById(`${this.elementName}-wrap`).children;
   },
   initDomPosition(nowIdx) {
-    if (this.initLoad) return;
     for (let i = 0; i < nowIdx - 1; i++) {
       this.child[i].style.transform = "translateY(-100%)";
     }
-    this.initLoad = true;
+  },
+  remove() {
+    if (this.scrollAnimation) cancelAnimationFrame(this.scrollAnimation);
+    const _divWrap = document.querySelector(`#${this.elementName}-wrap`);
+    if (!_divWrap) return;
+    const silkWrap = document.querySelector(`#${this.elementName}`);
+    [..._divWrap.children].forEach((e) => {
+      e.style = "position:relative";
+      const [_children] = e.children;
+      silkWrap.append(_children);
+    });
+    window.scrollTo(0, 0);
+    _divWrap.remove();
   },
 };
 export default silkSmooth;
